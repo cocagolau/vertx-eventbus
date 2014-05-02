@@ -14,13 +14,11 @@ import java.util.EventListener;
 import static eu.nets.utils.jetty.embedded.EmbeddedSpringBuilder.createSpringContextLoader;
 
 public class StartAppJetty {
-
-
     private LifeCycle.Listener jettyLifeCycleListener;
 
     public static void main(String... args) {
-        StartAppJetty startScApp = new StartAppJetty();
-        startScApp.startJetty();
+        StartAppJetty startApp = new StartAppJetty();
+        startApp.startJetty();
 
     }
 
@@ -49,6 +47,7 @@ public class StartAppJetty {
         try {
             builder.startJetty();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
