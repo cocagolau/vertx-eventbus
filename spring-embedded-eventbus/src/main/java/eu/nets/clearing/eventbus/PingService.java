@@ -25,7 +25,7 @@ public class PingService {
         // no handling of response
     }
 
-    @Scheduled(fixedDelay = 5000)
+//    @Scheduled(fixedDelay = 5000)
     public void pingJsonWithReply() {
         log.info("Sending ping...");
         JsonObject jsonPing = new JsonObject().putString("ping", "ping");
