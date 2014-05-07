@@ -23,10 +23,6 @@ public class SpringConfigApp2 {
     private Vertx vertx;
     private int vertxPort = RandomInt.randInt(2000, 6000);
 
-    @Bean
-    public PongService pongService() {
-        return new PongService();
-    }
 
     @Bean PongServicePublish pongServicePublish() {
         return new PongServicePublish();
