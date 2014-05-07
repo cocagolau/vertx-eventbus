@@ -1,6 +1,8 @@
-package eu.nets.clearing.eventbus;
+package eu.nets.clearing.eventbus.string;
 
 import com.google.gson.Gson;
+import eu.nets.clearing.eventbus.JsonPing;
+import eu.nets.clearing.eventbus.VertxMessageBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,8 @@ public class PingServiceString {
     @Autowired
     EventBus eventBus;
 
-    @Autowired VertxMessageBus vertxMessageBus;
+    @Autowired
+    VertxMessageBus vertxMessageBus;
 
 //    @Scheduled(fixedDelay = 5000)
     public void ping() {
