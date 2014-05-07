@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.AsyncResultHandler;
 import org.vertx.java.core.Vertx;
@@ -14,18 +15,27 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-public class SpringConfig {
+@EnableScheduling
+public class SpringConfigApp {
+
+    private static Logger log = LoggerFactory.getLogger(SpringConfigApp.class);
 
     private Vertx vertx;
+    private int vertxPort = RandomInt.randInt(1000, 6000);
 
-    private static Logger log = LoggerFactory.getLogger(SpringConfig.class);
+    @Bean
+    public PingService pingService() {
+        return new PingService();
+    }
+
 
     @Bean
     public EventBus eventBus() {
         if(vertx != null && vertx.eventBus() != null) return vertx.eventBus();
 
         final CountDownLatch countDownLatch = new CountDownLatch(1);
-        VertxFactory.newVertx(4545, "localhost", new AsyncResultHandler<Vertx>() {
+        log.info("Starting Vertx Eventbus on: localhost:" + vertxPort);
+        VertxFactory.newVertx(vertxPort, "localhost", new AsyncResultHandler<Vertx>() {
             @Override
             public void handle(AsyncResult<Vertx> event) {
                 vertx = event.result();
@@ -44,7 +54,4 @@ public class SpringConfig {
     public VertxMessageBus vertxMessageBus() {
         return new VertxMessageBus(eventBus());
     }
-
-
-
 }

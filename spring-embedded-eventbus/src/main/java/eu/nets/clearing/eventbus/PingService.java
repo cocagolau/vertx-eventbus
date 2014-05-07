@@ -1,43 +1,49 @@
 package eu.nets.clearing.eventbus;
 
-import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.EventBus;
 import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonObject;
 
 @Service
 public class PingService {
-
+    private static Logger log = LoggerFactory.getLogger(PingService.class);
 
     @Autowired
     EventBus eventBus;
 
-    public void ping() {
-
-        JsonPing ping = new JsonPing("ping");
-        String payload = new Gson().toJson(ping);
-
-        eventBus.sendWithTimeout("vertx.ping", payload, 1000,  new Handler<AsyncResult<Message<String>>>() {
-            @Override
-            public void handle(AsyncResult<Message<String>> event) {
-                if (event.succeeded()) {
-                    String response = event.result().body();
-                    System.out.println("We got response:" + response);
-                }
-            }
-        });
+//    @Scheduled(fixedDelay = 5000)
+    public void pingJson() {
+        log.info("Sending ping...");
+        JsonObject jsonPing = new JsonObject().putString("ping", "ping");
+        eventBus.send("vertx.ping.json", jsonPing);
+        // no handling of response
     }
 
+    @Scheduled(fixedDelay = 5000)
+    public void pingJsonWithReply() {
+        log.info("Sending ping...");
+        JsonObject jsonPing = new JsonObject().putString("ping", "ping");
+        eventBus.send("vertx.ping.json", jsonPing, new Handler<Message<JsonObject>>() {
+            @Override
+            public void handle(Message<JsonObject> message) {
+               log.info("Got response:" + message.body().getString("ping"));
+            }
+        });
 
-    private class JsonPing {
-        public String ping;
+        log.info("Done !");
+    }
 
-        public JsonPing(String ping) {
-            this.ping = ping;
-        }
+//    @Scheduled(fixedDelay = 5000)
+    public void pingJsonPublish() {
+        log.info("Sending ping...");
+        JsonObject jsonPing = new JsonObject().putString("ping", "ping");
+        eventBus.publish("vertx.ping.publish", jsonPing);
     }
 
 }

@@ -20,18 +20,11 @@ public class VertxMessageBus {
         this.eventBus = eventBus;
     }
 
-    public VertxMessageBus(EventBus eventBus, Integer timeoutInSeconds) {
-        this.eventBus = eventBus;
-        this.timeoutInSeconds = timeoutInSeconds;
-    }
-
-    public void sendAsync(final String address, final String json) {
+    public void requestReply(final String address, final String json) {
         eventBus.send(address, json);
     }
 
-    public String sendGetRequest(final String address, final String json) {
-        log.info("Send json request to " + address + " :" + json + ": " + json);
-
+    public String requestReplyBlocking(final String address, final String json) {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
         final StringBuilder reply = new StringBuilder();
 
